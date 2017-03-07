@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <div id="content"></div>
+        <script>
+            var req = new XMLHttpRequest();
+            req.open("GET","http://localhost:8080/postit/resources/utenti",true);
+            req.send();
+            req.onreadystatechange = function () {      <!-- 200 risposta OK -->
+                if (req.readyState == 4 && (req.status == 200)) {
+                    var jsonData = JSON.parse(req.responseText);
+                    var html="<ul>";
+                    for (var item in jsonData) {
+                        html=html+"<li>"+jsonData[item].usr+"</li>";
+                    }
+                    html= html+ "</ul>";
+                    document.getElementById("content").innerHTML = html;
+                }
+            }
+        </script>    
+    </body>
+</html>

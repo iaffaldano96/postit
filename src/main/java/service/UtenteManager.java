@@ -9,6 +9,7 @@ import entity.Utente;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
 /**
@@ -35,7 +36,14 @@ public class UtenteManager {
     }
     
     public Utente findByUser(String usr, String psw){
-        return  em.createNamedQuery(Utente.FIND_BY_USER_PWD,Utente.class).setParameter("usr", usr).setParameter("psw", psw).getSingleResult();        
+        Utente result=null;
+        try{
+        result= em.createNamedQuery(Utente.FIND_BY_USER_PWD,Utente.class)
+                .setParameter("usr", usr).setParameter("psw", psw).getSingleResult();   
+        } catch(NoResultException ex){
+            
+        }
+        return result;
     }
     
     public void remove(Utente u){

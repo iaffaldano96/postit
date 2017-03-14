@@ -10,6 +10,19 @@
  */
 public class spiga {    
     /*    
+        DOM => Document Object Model. Interagiscono lui per cambiare formati
+            Tecnologia asincrona. La principale è  Ajax
+        Node.js => un tool per scrivere server-side di javascript 
+    
+        bower.json => contiene le dipendenze della tua app o dipendenze di sviluppo. INstallati tramite bower
+        polymer.json => configurazione della nostra app
+                        shell ==> componente da cui partire. Star Up
+                        fragments ==> le nostre pagine
+    
+        <dom-module id="my-app"> ==> come inizia e id=ecc è il tag
+    
+        template ==> rapp la grafica del mio componente
+    
         Web Services ==> Soap/rest       
         REST (2000)==> Representational Staste Transfer
             su Java implementata con Jax.rs

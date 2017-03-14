@@ -18,9 +18,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 /**
- *
+ * curl -i -X -H "Content-Type:application/json" -d '{"usr":"mario","psw":"secret"}' http://localhost:8080/postit/resources/utenti/login
  * @author tss
  */
 
@@ -68,6 +69,18 @@ public class UtenteResources {
         
         Utente u= new Utente(usr, psw, email);
         utenteManager.save(u);
+    }
+    
+    @POST
+    @Path("login")
+    public Response login(Utente u){
+        if(u==null)
+            return  Response.serverError().header("caused-by ", "nessun dato per effettuare il login").build();
+        Utente finded=utenteManager.findByUser(u.getUsr(), u.getPsw());
+
+        return finded==null ? Response.status(Response.Status.UNAUTHORIZED)
+                .header("caused-by ", "login faild").build(): Response.ok().build();
+         
     }
     
 }

@@ -6,11 +6,9 @@
 package service;
 
 import entity.Messaggio;
-import entity.Utente;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -68,5 +66,10 @@ public class MessaggioResources {
         messaggioManager.save(m);
     } 
     
+    @DELETE
+    @Path("{id}")
+    public void delete(@PathParam("id") Long id){
+        messaggioManager.delete(id);
+    }
     
 }

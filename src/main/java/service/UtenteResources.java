@@ -68,20 +68,29 @@ public class UtenteResources {
     
     @POST           // i parametri ci arrivano come form con method=POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED) 
-    @Path("registrazione")
-    public Response create(@FormParam("usr") String usr,
+    public void create(@FormParam("usr") String usr,
             @FormParam("psw") String psw,
-            @FormParam("email") String email){
-        
-        if(usr.isEmpty() || psw.isEmpty() ||email.isEmpty()){
-            return  Response.serverError().header("caused-by ", "nessun dato per effettuare la registrazione").build();
-        }        
-        
+            @FormParam("email") String email){ 
         Utente u= new Utente(usr, psw, email);
         utenteManager.save(u);
-        System.out.println("Registrazione actived...");
+ 
+    }
+    
+    @POST
+    @Path("registrazione")
+    public Response registrazione(Utente u){
+        if(u==null)
+            return  Response.serverError().header("caused-by ", "nessun dato per effettuare il login").build();             
         
-        JsonObject json=Json.createObjectBuilder().add("id_token",usr).build();
+        Utente ut=utenteManager.findByUser(u.getUsr(), u.getPsw());
+        if(ut==null){
+            utenteManager.save(u);              
+        }else{
+            return Response.status(Response.Status.NOT_ACCEPTABLE)  
+                .header("caused-by ", "registrazione failed").build();
+        }
+        
+        JsonObject json=Json.createObjectBuilder().add("user",u.getUsr()).build();
         return Response.ok(json).build();
     }
     

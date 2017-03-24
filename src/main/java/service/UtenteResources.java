@@ -79,17 +79,21 @@ public class UtenteResources {
     @POST
     @Path("registrazione")
     public Response registrazione(Utente u){
-        if(u==null)
+        System.out.println("Fabio Chiesa");
+        if(u==null){
+            System.out.println("Fabio Cessa");
             return  Response.serverError().header("caused-by ", "nessun dato per effettuare il login").build();             
-        
+        }
         Utente ut=utenteManager.findByUser(u.getUsr(), u.getPsw());
         if(ut==null){
+            System.out.println("Fabio Culo");
             utenteManager.save(u);              
         }else{
+            System.out.println("Fabio Bello");
             return Response.status(Response.Status.NOT_ACCEPTABLE)  
                 .header("caused-by ", "registrazione failed").build();
         }
-        
+        System.out.println("Fabio Chiesa");
         JsonObject json=Json.createObjectBuilder().add("user",u.getUsr()).build();
         return Response.ok(json).build();
     }

@@ -5,8 +5,14 @@
  */
 package service;
 
+
 import java.io.IOException;
+
 import java.util.List;
+import static javafx.scene.input.KeyCode.P;
+import javax.annotation.Priority;
+import javax.inject.Inject;
+import javax.ws.rs.Priorities;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.Response;
@@ -23,11 +29,16 @@ import javax.ws.rs.ext.Provider;
 
 @TokenNeeded
 @Provider
+@Priority(Priorities.AUTHENTICATION)
 public class TokenNeededFilter implements ContainerRequestFilter{
+    
+    @Inject
+    TokenManager tokenManager;
 
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
-        System.out.println("TokenNeededFilter in action...");               
+        System.out.println("TokenNeededFilter in action..."); 
+        
         
         List<String> id_token =requestContext.getHeaders().get("id_token");
         if(id_token==null || id_token.isEmpty()){

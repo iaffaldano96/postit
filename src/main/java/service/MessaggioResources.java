@@ -6,7 +6,9 @@
 package service;
 
 import entity.Messaggio;
+import entity.Utente;
 import java.util.List;
+import java.util.Objects;
 import javax.ejb.EJBException;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -15,12 +17,15 @@ import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
 
 /**
  *
@@ -32,6 +37,11 @@ import javax.ws.rs.core.MediaType;
 @Produces({MediaType.APPLICATION_JSON,MediaType.APPLICATION_XML})
 public class MessaggioResources {
     
+    @Inject
+    TokenManager tokenManager;
+
+    @Context
+    HttpHeaders httpHeaders;
     @Inject
     MessaggioManager messaggioManager;
     @Inject //prende da db e mette in UtenteManager
@@ -64,11 +74,11 @@ public class MessaggioResources {
         return messaggioManager.findById(id);
     }
     
-    @POST
+    /*@POST
     @TokenNeeded
     public void create(Messaggio m){
         messaggioManager.save(m);
-    }  
+    }  */
     
     @GET
     @Path("user/{id}")
@@ -77,7 +87,7 @@ public class MessaggioResources {
         return messaggioManager.findByUser(id);
     }
     
-    @POST
+    /*@POST
     @TokenNeeded
     public void create(@FormParam("titolo") String titolo,
             @FormParam("contenuto") String contenuto,
@@ -86,7 +96,28 @@ public class MessaggioResources {
         
         Messaggio m= new Messaggio(titolo, contenuto, utenteManager.findById(id));
         messaggioManager.save(m);
+    } */
+    
+    @POST
+    @Path("{id}")
+    @TokenNeeded
+    public Response create(@PathParam("id") Long id,Messaggio m){
+        Utente finded = utenteManager.findById(id);
+        m.setUtente(finded/*tokenManager.getCurrentUser()*/); //setto al mex l'utente trovato
+        messaggioManager.save(m);
+        return Response.ok().build();
     } 
+    
+    @PUT
+    @Path("{id}")
+    @TokenNeeded
+    public void update(@PathParam("id") Long id,Messaggio m) {
+        if(!Objects.equals(id, m.getId())){
+            System.out.println("generare errore..");
+        }
+        m.setUtente(tokenManager.getCurrentUser());
+        messaggioManager.save(m);
+    }
     
     @DELETE
     @Path("{id}")
